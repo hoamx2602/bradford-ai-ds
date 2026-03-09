@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_b5475882680f0d236e2959ee1589b87e {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_b5475882680f0d236e2959ee1589b87e" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_b5475882680f0d236e2959ee1589b87e = L.map(
+                "map_b5475882680f0d236e2959ee1589b87e",
+                {
+                    center: [54.0, -2.5],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 6,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_581ff4827b7045264c55c036e9c69938 = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_581ff4827b7045264c55c036e9c69938.addTo(map_b5475882680f0d236e2959ee1589b87e);
+        
+    
+            var circle_marker_31d45dd8a3f30520ed97c3c1d8808dbf = L.circleMarker(
+                [57.1497, -2.0943],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.45, "stroke": true, "weight": 3}
+            ).addTo(map_b5475882680f0d236e2959ee1589b87e);
+        
+    
+        var popup_a039329163464206adbf71891627e541 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_620a887fba1b4fe58d709bd4adbfd412 = $(`<div id="html_620a887fba1b4fe58d709bd4adbfd412" style="width: 100.0%; height: 100.0%;">Aberdeen<br>Listings: 356<br>Mean price: £159,472</div>`)[0];
+                popup_a039329163464206adbf71891627e541.setContent(html_620a887fba1b4fe58d709bd4adbfd412);
+            
+        
+
+        circle_marker_31d45dd8a3f30520ed97c3c1d8808dbf.bindPopup(popup_a039329163464206adbf71891627e541)
+        ;
+
+        
+    
+    
+            var circle_marker_9ede0d8c051ab58a4e72e1c15ca48858 = L.circleMarker(
+                [52.4862, -1.8904],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 21.8625, "stroke": true, "weight": 3}
+            ).addTo(map_b5475882680f0d236e2959ee1589b87e);
+        
+    
+        var popup_3ef43d28d759678fb569313f8f412704 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_123a2dd7866d7563f510eb91d132d5a4 = $(`<div id="html_123a2dd7866d7563f510eb91d132d5a4" style="width: 100.0%; height: 100.0%;">Birmingham<br>Listings: 949<br>Mean price: £275,858</div>`)[0];
+                popup_3ef43d28d759678fb569313f8f412704.setContent(html_123a2dd7866d7563f510eb91d132d5a4);
+            
+        
+
+        circle_marker_9ede0d8c051ab58a4e72e1c15ca48858.bindPopup(popup_3ef43d28d759678fb569313f8f412704)
+        ;
+
+        
+    
+    
+            var circle_marker_38581f0bfb297b7db6d0ccc6ffbe155a = L.circleMarker(
+                [54.0, -2.5],
+                {"bubblingMouseEvents": true, "color": "orange", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "orange", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 22.3875, "stroke": true, "weight": 3}
+            ).addTo(map_b5475882680f0d236e2959ee1589b87e);
+        
+    
+        var popup_f82394f0de8b57492fdc3127c1e4afd7 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_9385b11cdcd079f5365ae543271d065a = $(`<div id="html_9385b11cdcd079f5365ae543271d065a" style="width: 100.0%; height: 100.0%;">Bournemouth<br>Listings: 991<br>Mean price: £358,397</div>`)[0];
+                popup_f82394f0de8b57492fdc3127c1e4afd7.setContent(html_9385b11cdcd079f5365ae543271d065a);
+            
+        
+
+        circle_marker_38581f0bfb297b7db6d0ccc6ffbe155a.bindPopup(popup_f82394f0de8b57492fdc3127c1e4afd7)
+        ;
+
+        
+    
+    
+            var circle_marker_f61bef6c0616cfa229c26c008313257d = L.circleMarker(
+                [51.4545, -2.5879],
+                {"bubblingMouseEvents": true, "color": "orange", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "orange", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 21.375, "stroke": true, "weight": 3}
+            ).addTo(map_b5475882680f0d236e2959ee1589b87e);
+        
+    
+        var popup_e74837c01b69e4038a66e11553863db8 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_af2d44334b9fb59a81023c2a2c258462 = $(`<div id="html_af2d44334b9fb59a81023c2a2c258462" style="width: 100.0%; height: 100.0%;">Bristol<br>Listings: 910<br>Mean price: £408,353</div>`)[0];
+                popup_e74837c01b69e4038a66e11553863db8.setContent(html_af2d44334b9fb59a81023c2a2c258462);
+            
+        
+
+        circle_marker_f61bef6c0616cfa229c26c008313257d.bindPopup(popup_e74837c01b69e4038a66e11553863db8)
+        ;
+
+        
+    
+    
+            var circle_marker_d65eb0e54c65c6524b61f92c3bc45143 = L.circleMarker(
+                [51.4816, -3.1791],
+                {"bubblingMouseEvents": true, "color": "orange", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "orange", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 21.55, "stroke": true, "weight": 3}
+            ).addTo(map_b5475882680f0d236e2959ee1589b87e);
+        
+    
+        var popup_b702cec8342c0e14099f26ab70302e84 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_80a811c1ec19113766af2f211e016f83 = $(`<div id="html_80a811c1ec19113766af2f211e016f83" style="width: 100.0%; height: 100.0%;">Cardiff<br>Listings: 924<br>Mean price: £320,806</div>`)[0];
+                popup_b702cec8342c0e14099f26ab70302e84.setContent(html_80a811c1ec19113766af2f211e016f83);
+            
+        
+
+        circle_marker_d65eb0e54c65c6524b61f92c3bc45143.bindPopup(popup_b702cec8342c0e14099f26ab70302e84)
+        ;
+
+        
+    
+    
+            var circle_marker_7e3666af9e0fd655c5e68992ad3fb0e2 = L.circleMarker(
+                [55.9533, -3.1883],
+                {"bubblingMouseEvents": true, "color": "orange", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "orange", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 20.875, "stroke": true, "weight": 3}
+            ).addTo(map_b5475882680f0d236e2959ee1589b87e);
+        
+    
+        var popup_fc96fb76710f8629aa87b420e729f420 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_32a80d7955f0b992361c3e3cd469aa9e = $(`<div id="html_32a80d7955f0b992361c3e3cd469aa9e" style="width: 100.0%; height: 100.0%;">Edinburgh<br>Listings: 870<br>Mean price: £385,999</div>`)[0];
+                popup_fc96fb76710f8629aa87b420e729f420.setContent(html_32a80d7955f0b992361c3e3cd469aa9e);
+            
+        
+
+        circle_marker_7e3666af9e0fd655c5e68992ad3fb0e2.bindPopup(popup_fc96fb76710f8629aa87b420e729f420)
+        ;
+
+        
+    
+    
+            var circle_marker_ea47d338707a37e2d259df0d8de40de1 = L.circleMarker(
+                [55.8642, -4.2518],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12.5375, "stroke": true, "weight": 3}
+            ).addTo(map_b5475882680f0d236e2959ee1589b87e);
+        
+    
+        var popup_5202c3b3bc6ddc37d9569d458bfc18f0 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_4601ba80d145118f3ce47bae28816fa6 = $(`<div id="html_4601ba80d145118f3ce47bae28816fa6" style="width: 100.0%; height: 100.0%;">Glasgow<br>Listings: 203<br>Mean price: £179,920</div>`)[0];
+                popup_5202c3b3bc6ddc37d9569d458bfc18f0.setContent(html_4601ba80d145118f3ce47bae28816fa6);
+            
+        
+
+        circle_marker_ea47d338707a37e2d259df0d8de40de1.bindPopup(popup_5202c3b3bc6ddc37d9569d458bfc18f0)
+        ;
+
+        
+    
+    
+            var circle_marker_2b863375a0a49cdc04904b4d66afaa6e = L.circleMarker(
+                [54.0, -2.5],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.1, "stroke": true, "weight": 3}
+            ).addTo(map_b5475882680f0d236e2959ee1589b87e);
+        
+    
+        var popup_95402473168ca99fe53419af745fff67 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_5515071c5356285ba035a5efdc76abe1 = $(`<div id="html_5515071c5356285ba035a5efdc76abe1" style="width: 100.0%; height: 100.0%;">Lancashire<br>Listings: 88<br>Mean price: £147,782</div>`)[0];
+                popup_95402473168ca99fe53419af745fff67.setContent(html_5515071c5356285ba035a5efdc76abe1);
+            
+        
+
+        circle_marker_2b863375a0a49cdc04904b4d66afaa6e.bindPopup(popup_95402473168ca99fe53419af745fff67)
+        ;
+
+        
+    
+    
+            var circle_marker_500d378232c83e1a1f5bc92e97a1f0fd = L.circleMarker(
+                [52.6369, -1.1398],
+                {"bubblingMouseEvents": true, "color": "orange", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "orange", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.775, "stroke": true, "weight": 3}
+            ).addTo(map_b5475882680f0d236e2959ee1589b87e);
+        
+    
+        var popup_b96c514d7db8c24e88f548bcdb620d55 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_272a3a41c9053335f584f7b12844fe60 = $(`<div id="html_272a3a41c9053335f584f7b12844fe60" style="width: 100.0%; height: 100.0%;">Leicester<br>Listings: 62<br>Mean price: £324,498</div>`)[0];
+                popup_b96c514d7db8c24e88f548bcdb620d55.setContent(html_272a3a41c9053335f584f7b12844fe60);
+            
+        
+
+        circle_marker_500d378232c83e1a1f5bc92e97a1f0fd.bindPopup(popup_b96c514d7db8c24e88f548bcdb620d55)
+        ;
+
+        
+    
+    
+            var circle_marker_d600914f163280d75142412c4171ed51 = L.circleMarker(
+                [53.4084, -2.9916],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 19.7125, "stroke": true, "weight": 3}
+            ).addTo(map_b5475882680f0d236e2959ee1589b87e);
+        
+    
+        var popup_017e2f1e4fa046e1f7c642fb3e13c3ca = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_f4215c1505a51c29364e4384f13ea5f6 = $(`<div id="html_f4215c1505a51c29364e4384f13ea5f6" style="width: 100.0%; height: 100.0%;">Liverpool<br>Listings: 777<br>Mean price: £258,845</div>`)[0];
+                popup_017e2f1e4fa046e1f7c642fb3e13c3ca.setContent(html_f4215c1505a51c29364e4384f13ea5f6);
+            
+        
+
+        circle_marker_d600914f163280d75142412c4171ed51.bindPopup(popup_017e2f1e4fa046e1f7c642fb3e13c3ca)
+        ;
+
+        
+    
+    
+            var circle_marker_f5b9dffc4c9cf8013000e68c246114c7 = L.circleMarker(
+                [51.5074, -0.1278],
+                {"bubblingMouseEvents": true, "color": "darkred", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "darkred", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 20.5, "stroke": true, "weight": 3}
+            ).addTo(map_b5475882680f0d236e2959ee1589b87e);
+        
+    
+        var popup_f8617a8cc659fedfbe87c67ed6b50642 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_d80a4fc1607935293e90c647c60f0115 = $(`<div id="html_d80a4fc1607935293e90c647c60f0115" style="width: 100.0%; height: 100.0%;">London<br>Listings: 840<br>Mean price: £874,141</div>`)[0];
+                popup_f8617a8cc659fedfbe87c67ed6b50642.setContent(html_d80a4fc1607935293e90c647c60f0115);
+            
+        
+
+        circle_marker_f5b9dffc4c9cf8013000e68c246114c7.bindPopup(popup_f8617a8cc659fedfbe87c67ed6b50642)
+        ;
+
+        
+    
+    
+            var circle_marker_421d3b69681913c3c84cb50da5e561ab = L.circleMarker(
+                [53.4808, -2.2426],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 18.3375, "stroke": true, "weight": 3}
+            ).addTo(map_b5475882680f0d236e2959ee1589b87e);
+        
+    
+        var popup_33ad39c4c899d66d95f95c114a5a50ef = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_92d79f755b3f920e62b216617e57da88 = $(`<div id="html_92d79f755b3f920e62b216617e57da88" style="width: 100.0%; height: 100.0%;">Manchester<br>Listings: 667<br>Mean price: £287,058</div>`)[0];
+                popup_33ad39c4c899d66d95f95c114a5a50ef.setContent(html_92d79f755b3f920e62b216617e57da88);
+            
+        
+
+        circle_marker_421d3b69681913c3c84cb50da5e561ab.bindPopup(popup_33ad39c4c899d66d95f95c114a5a50ef)
+        ;
+
+        
+    
+    
+            var circle_marker_3d8770d33c17ea80c90487a7331403b3 = L.circleMarker(
+                [52.9548, -1.1581],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 20.75, "stroke": true, "weight": 3}
+            ).addTo(map_b5475882680f0d236e2959ee1589b87e);
+        
+    
+        var popup_97aa35bf7a7fad8b44e30c7cb4dea85f = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_0f29afda573c9d6ccf23b867e44dbe21 = $(`<div id="html_0f29afda573c9d6ccf23b867e44dbe21" style="width: 100.0%; height: 100.0%;">Nottingham<br>Listings: 860<br>Mean price: £278,529</div>`)[0];
+                popup_97aa35bf7a7fad8b44e30c7cb4dea85f.setContent(html_0f29afda573c9d6ccf23b867e44dbe21);
+            
+        
+
+        circle_marker_3d8770d33c17ea80c90487a7331403b3.bindPopup(popup_97aa35bf7a7fad8b44e30c7cb4dea85f)
+        ;
+
+        
+    
+    
+            var circle_marker_b10533702b53a203acafaeea29bbcb9e = L.circleMarker(
+                [54.0, -2.5],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 21.2625, "stroke": true, "weight": 3}
+            ).addTo(map_b5475882680f0d236e2959ee1589b87e);
+        
+    
+        var popup_2582f4f243f1c1d03c32bd2b0749c6e2 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_e90a4f960ad340e1ebd886f361864f40 = $(`<div id="html_e90a4f960ad340e1ebd886f361864f40" style="width: 100.0%; height: 100.0%;">Peterborough<br>Listings: 901<br>Mean price: £266,970</div>`)[0];
+                popup_2582f4f243f1c1d03c32bd2b0749c6e2.setContent(html_e90a4f960ad340e1ebd886f361864f40);
+            
+        
+
+        circle_marker_b10533702b53a203acafaeea29bbcb9e.bindPopup(popup_2582f4f243f1c1d03c32bd2b0749c6e2)
+        ;
+
+        
+    
+    
+            var circle_marker_22ec5f23679af73a04d55af134798f5f = L.circleMarker(
+                [54.0, -2.5],
+                {"bubblingMouseEvents": true, "color": "orange", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "orange", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 18.025, "stroke": true, "weight": 3}
+            ).addTo(map_b5475882680f0d236e2959ee1589b87e);
+        
+    
+        var popup_f1037a7a2ed6c7dfeb67a578fba2477e = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_5cca9abbd4371f702389be833117da62 = $(`<div id="html_5cca9abbd4371f702389be833117da62" style="width: 100.0%; height: 100.0%;">Portsmouth<br>Listings: 642<br>Mean price: £314,628</div>`)[0];
+                popup_f1037a7a2ed6c7dfeb67a578fba2477e.setContent(html_5cca9abbd4371f702389be833117da62);
+            
+        
+
+        circle_marker_22ec5f23679af73a04d55af134798f5f.bindPopup(popup_f1037a7a2ed6c7dfeb67a578fba2477e)
+        ;
+
+        
+    
+    
+            var circle_marker_2394365dc39759937cceae2ebe43a89f = L.circleMarker(
+                [50.9097, -1.4044],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 22.1125, "stroke": true, "weight": 3}
+            ).addTo(map_b5475882680f0d236e2959ee1589b87e);
+        
+    
+        var popup_fb33fce0956d191216cb429d21bc9e04 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_8eadb371848b661c3258956a77bf0529 = $(`<div id="html_8eadb371848b661c3258956a77bf0529" style="width: 100.0%; height: 100.0%;">Southampton<br>Listings: 969<br>Mean price: £276,660</div>`)[0];
+                popup_fb33fce0956d191216cb429d21bc9e04.setContent(html_8eadb371848b661c3258956a77bf0529);
+            
+        
+
+        circle_marker_2394365dc39759937cceae2ebe43a89f.bindPopup(popup_fb33fce0956d191216cb429d21bc9e04)
+        ;
+
+        
+    
+    
+            var circle_marker_052c1f49a72ca68b5f3302f789c53fea = L.circleMarker(
+                [54.0, -2.5],
+                {"bubblingMouseEvents": true, "color": "orange", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "orange", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 22.025, "stroke": true, "weight": 3}
+            ).addTo(map_b5475882680f0d236e2959ee1589b87e);
+        
+    
+        var popup_1640f3a2d0d31dc7f3af20ee4a0abc1f = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_00ddfaa8a971a98cb813ac4921a06808 = $(`<div id="html_00ddfaa8a971a98cb813ac4921a06808" style="width: 100.0%; height: 100.0%;">Swansea<br>Listings: 962<br>Mean price: £317,989</div>`)[0];
+                popup_1640f3a2d0d31dc7f3af20ee4a0abc1f.setContent(html_00ddfaa8a971a98cb813ac4921a06808);
+            
+        
+
+        circle_marker_052c1f49a72ca68b5f3302f789c53fea.bindPopup(popup_1640f3a2d0d31dc7f3af20ee4a0abc1f)
+        ;
+
+        
+    
+    
+            var circle_marker_e928607249069f884be3510c97bba510 = L.circleMarker(
+                [53.8008, -1.5491],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 33.4625, "stroke": true, "weight": 3}
+            ).addTo(map_b5475882680f0d236e2959ee1589b87e);
+        
+    
+        var popup_4827e3a2276a62763af613d17963754c = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_f17688b8a3ce1aa3cf5394fa0333274d = $(`<div id="html_f17688b8a3ce1aa3cf5394fa0333274d" style="width: 100.0%; height: 100.0%;">West Yorkshire<br>Listings: 1877<br>Mean price: £252,158</div>`)[0];
+                popup_4827e3a2276a62763af613d17963754c.setContent(html_f17688b8a3ce1aa3cf5394fa0333274d);
+            
+        
+
+        circle_marker_e928607249069f884be3510c97bba510.bindPopup(popup_4827e3a2276a62763af613d17963754c)
+        ;
+
+        
+    
+    
+            var circle_marker_c4455955ab845081c74aef969677811c = L.circleMarker(
+                [54.0, -2.5],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 17.375, "stroke": true, "weight": 3}
+            ).addTo(map_b5475882680f0d236e2959ee1589b87e);
+        
+    
+        var popup_9e427a8eaeacd4009164d1b850a665e6 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_fad1352bdceff2074d1188ac4467138e = $(`<div id="html_fad1352bdceff2074d1188ac4467138e" style="width: 100.0%; height: 100.0%;">Wolverhampton<br>Listings: 590<br>Mean price: £250,025</div>`)[0];
+                popup_9e427a8eaeacd4009164d1b850a665e6.setContent(html_fad1352bdceff2074d1188ac4467138e);
+            
+        
+
+        circle_marker_c4455955ab845081c74aef969677811c.bindPopup(popup_9e427a8eaeacd4009164d1b850a665e6)
+        ;
+
+        
+    
+</script>
+</html>
