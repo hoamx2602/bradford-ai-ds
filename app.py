@@ -1,8 +1,7 @@
 """
 Streamlit app: Zoopla Property Dataset – AI & Data Science (OIM7507-B)
-Tổng hợp dữ liệu, chất lượng, phân phối, bản đồ và mô hình.
-Hỗ trợ upload CSV: mọi phân tích chạy trên dữ liệu upload (nếu có).
-Chạy từ thư mục final_v1: streamlit run app.py
+Data overview, quality, distributions, map and model. Supports CSV upload for analysis.
+Run from final_v1: streamlit run app.py
 """
 
 import streamlit as st
@@ -10,7 +9,7 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 
-# Project root (thư mục chứa app.py)
+# Project root (directory containing app.py)
 ROOT = Path(__file__).resolve().parent
 DATA_RAW = ROOT / "data" / "raw" / "zoopla_raw.csv"
 DATA_LABELED = ROOT / "data" / "processed" / "zoopla_labeled.csv"
@@ -26,22 +25,22 @@ st.caption("OIM7507-B AI and Data Science – Group Assignment | University of B
 
 # --- Upload CSV (sidebar) ---
 st.sidebar.subheader("📤 Upload CSV")
-uploaded_file = st.sidebar.file_uploader("Chọn file CSV để phân tích trên dữ liệu mới", type=["csv"], help="Nếu có file, mọi mục bên dưới sẽ dùng dữ liệu này.")
+uploaded_file = st.sidebar.file_uploader("Choose a CSV file to run all analysis on your data", type=["csv"], help="If provided, all sections below will use this dataset.")
 if uploaded_file is not None:
     try:
         df_uploaded = pd.read_csv(uploaded_file)
         st.session_state["uploaded_df"] = df_uploaded
-        st.sidebar.success(f"Đã load **{len(df_uploaded):,}** dòng, **{len(df_uploaded.columns)}** cột.")
+        st.sidebar.success(f"Loaded **{len(df_uploaded):,}** rows, **{len(df_uploaded.columns)}** columns.")
     except Exception as e:
-        st.sidebar.error(f"Lỗi đọc CSV: {e}")
+        st.sidebar.error(f"Error reading CSV: {e}")
         st.session_state.pop("uploaded_df", None)
 else:
     if "uploaded_df" in st.session_state:
         del st.session_state["uploaded_df"]
-    st.sidebar.info("Chưa upload file → dùng dữ liệu mặc định trong `data/`.")
+    st.sidebar.info("No file uploaded → using default data in `data/`.")
 
 def get_data():
-    """Trả về DataFrame đang dùng: ưu tiên uploaded, không thì labeled hoặc raw."""
+    """Return the active DataFrame: prefer uploaded, else labeled or raw."""
     if "uploaded_df" in st.session_state:
         return st.session_state["uploaded_df"].copy()
     if DATA_LABELED.exists():
@@ -52,85 +51,85 @@ def get_data():
 
 def get_data_source_label():
     if "uploaded_df" in st.session_state:
-        return "**Nguồn: file CSV bạn vừa upload**"
+        return "**Source: your uploaded CSV file**"
     if DATA_LABELED.exists():
-        return "**Nguồn: data/processed/zoopla_labeled.csv**"
+        return "**Source: data/processed/zoopla_labeled.csv**"
     if DATA_RAW.exists():
-        return "**Nguồn: data/raw/zoopla_raw.csv**"
+        return "**Source: data/raw/zoopla_raw.csv**"
     return ""
 
-# Sidebar: chọn section
+# Sidebar: section
 section = st.sidebar.radio(
-    "Chọn mục",
+    "Section",
     [
-        "Tổng quan",
-        "Dữ liệu & Thống kê",
-        "Chất lượng dữ liệu",
-        "Phân phối & Khám phá",
-        "Bản đồ theo thành phố",
-        "Mô hình dự đoán giá",
+        "Overview",
+        "Data & Statistics",
+        "Data Quality",
+        "Distributions & Exploration",
+        "Map by City",
+        "Price Prediction Model",
     ],
 )
 
 df = get_data()
 source_label = get_data_source_label()
 
-# --- Tổng quan ---
-if section == "Tổng quan":
-    st.header("Tổng quan dự án")
+# --- Overview ---
+if section == "Overview":
+    st.header("Project Overview")
     if source_label:
         st.info(source_label)
     st.markdown("""
-    - **Nguồn dữ liệu:** Zoopla.co.uk (bất động sản bán tại UK), thu thập qua browser extension.
-    - **Quy trình:** Raw → Cleaning & Feature Engineering → Annotation (price_category) → ML demo.
-    - **Cấu trúc:** `data/raw`, `data/cleaned`, `data/processed`, `reports/figures`, `models/`.
+    - **Data source:** Zoopla.co.uk (UK residential for-sale listings), collected via browser extension.
+    - **Pipeline:** Raw → Cleaning & Feature Engineering → Annotation (price_category) → ML demo.
+    - **Structure:** `data/raw`, `data/cleaned`, `data/processed`, `reports/figures`, `models/`.
     """)
     if df is not None:
-        st.subheader("Dữ liệu – 5 dòng đầu")
+        st.subheader("Data – first 5 rows")
         st.dataframe(df.head(), use_container_width=True)
         c1, c2, c3 = st.columns(3)
-        c1.metric("Số dòng", f"{len(df):,}")
-        c2.metric("Số cột", len(df.columns))
-        c3.metric("Cột", ", ".join(df.columns[:5].tolist()) + ("..." if len(df.columns) > 5 else ""))
+        c1.metric("Rows", f"{len(df):,}")
+        c2.metric("Columns", len(df.columns))
+        c3.metric("Columns", ", ".join(df.columns[:5].tolist()) + ("..." if len(df.columns) > 5 else ""))
     else:
-        st.warning("Chưa có dữ liệu. Upload CSV bên trái hoặc đảm bảo có `data/raw/zoopla_raw.csv`.")
+        st.warning("No data available. Upload a CSV in the sidebar or ensure `data/raw/zoopla_raw.csv` exists.")
 
-# --- Dữ liệu & Thống kê ---
-elif section == "Dữ liệu & Thống kê":
-    st.header("Dữ liệu & Thống kê")
+# --- Data & Statistics ---
+elif section == "Data & Statistics":
+    st.header("Data & Statistics")
     if source_label:
         st.info(source_label)
     if df is None:
-        st.warning("Chưa có dữ liệu. Upload CSV hoặc chạy notebook 01→04.")
+        st.warning("No data. Upload a CSV or run notebooks 01→04.")
     else:
         df = df.copy()
         if "price" in df.columns:
             df["price"] = pd.to_numeric(df["price"], errors="coerce")
         c1, c2, c3 = st.columns(3)
-        c1.metric("Số bản ghi", f"{len(df):,}")
-        c2.metric("Số cột", len(df.columns))
+        c1.metric("Records", f"{len(df):,}")
+        c2.metric("Columns", len(df.columns))
         if "price" in df.columns:
-            c3.metric("Giá trung bình (£)", f"{df['price'].mean():,.0f}")
+            c3.metric("Mean price (£)", f"{df['price'].mean():,.0f}")
         else:
-            c3.metric("Cột số", len(df.select_dtypes(include=[np.number]).columns))
-        st.subheader("Mẫu dữ liệu")
+            c3.metric("Numeric columns", len(df.select_dtypes(include=[np.number]).columns))
+        st.subheader("Sample data")
         st.dataframe(df.head(100), use_container_width=True)
         if "price_category" in df.columns:
-            st.subheader("Phân bố price_category")
+            st.subheader("price_category distribution")
             st.bar_chart(df["price_category"].value_counts())
         elif "city" in df.columns:
-            st.subheader("Phân bố theo city (top 15)")
+            st.subheader("Distribution by city (top 15)")
             st.bar_chart(df["city"].value_counts().head(15))
 
-# --- Chất lượng dữ liệu ---
-elif section == "Chất lượng dữ liệu":
-    st.header("Báo cáo chất lượng dữ liệu")
+# --- Data Quality ---
+elif section == "Data Quality":
+    st.header("Data Quality Report")
     if source_label:
         st.info(source_label)
     if df is None:
-        st.warning("Chưa có dữ liệu. Upload CSV hoặc chạy notebook 02.")
+        st.warning("No data. Upload a CSV or run notebook 02.")
     else:
-        # Luôn tính từ df hiện tại (upload hoặc mặc định)
+        # Always computed from current df (upload or default)
         q = pd.DataFrame({
             "column": df.columns,
             "dtype": df.dtypes.astype(str).values,
@@ -140,16 +139,16 @@ elif section == "Chất lượng dữ liệu":
         q["null_pct"] = (q["null_count"] / len(df) * 100).round(2)
         q["example"] = df.iloc[0].astype(str).values
         st.dataframe(q, use_container_width=True)
-        st.subheader("Tỷ lệ thiếu theo cột (%)")
+        st.subheader("Missing rate by column (%)")
         st.bar_chart(q.set_index("column")["null_pct"])
 
-# --- Phân phối & Khám phá ---
-elif section == "Phân phối & Khám phá":
-    st.header("Phân phối & Khám phá")
+# --- Distributions & Exploration ---
+elif section == "Distributions & Exploration":
+    st.header("Distributions & Exploration")
     if source_label:
         st.info(source_label)
     if df is None:
-        st.warning("Chưa có dữ liệu. Upload CSV hoặc chạy notebook 01→04.")
+        st.warning("No data. Upload a CSV or run notebooks 01→04.")
     else:
         df = df.copy()
         numeric_cols = df.select_dtypes(include=[np.number]).columns.tolist()
@@ -157,7 +156,7 @@ elif section == "Phân phối & Khám phá":
         all_plot_cols = [c for c in all_plot_cols if c in df.columns]
         if not all_plot_cols:
             all_plot_cols = numeric_cols[:10] if numeric_cols else list(df.columns)[:5]
-        col = st.selectbox("Chọn biến để vẽ histogram", all_plot_cols, index=0)
+        col = st.selectbox("Select variable for histogram", all_plot_cols, index=0)
         if col in df.columns:
             x = pd.to_numeric(df[col], errors="coerce").dropna()
             if len(x) > 0:
@@ -165,7 +164,7 @@ elif section == "Phân phối & Khám phá":
                     x = x[x.between(x.quantile(0.01), x.quantile(0.99))]
                 st.bar_chart(x.value_counts().sort_index().head(50))
         if "city" in df.columns and "price" in df.columns:
-            st.subheader("Giá theo thành phố (top 10)")
+            st.subheader("Price by city (top 10)")
             df["price_num"] = pd.to_numeric(df["price"], errors="coerce")
             df_valid = df.dropna(subset=["price_num"])
             top_cities = df_valid["city"].value_counts().head(10).index.tolist()
@@ -173,12 +172,12 @@ elif section == "Phân phối & Khám phá":
             by_city = df_top.groupby("city")["price_num"].agg(["mean", "count"]).round(0)
             st.dataframe(by_city, use_container_width=True)
         elif "city" in df.columns:
-            st.subheader("Số lượng theo thành phố (top 10)")
+            st.subheader("Count by city (top 10)")
             st.bar_chart(df["city"].value_counts().head(10))
 
-# --- Bản đồ ---
-elif section == "Bản đồ theo thành phố":
-    st.header("Bản đồ theo khu vực (thành phố)")
+# --- Map ---
+elif section == "Map by City":
+    st.header("Map by Region (City)")
     if source_label:
         st.info(source_label)
     if df is not None and "city" in df.columns:
@@ -225,17 +224,17 @@ elif section == "Bản đồ theo thành phố":
                         ).add_to(m)
                     st.components.v1.html(m._repr_html_(), height=500, scrolling=False)
                 except Exception as e:
-                    st.warning(f"Không vẽ được bản đồ từ dữ liệu: {e}. Đang dùng bản đồ mặc định.")
+                    st.warning(f"Could not build map from data: {e}. Using default map.")
                     if MAP_HTML.exists():
                         with open(MAP_HTML, "r", encoding="utf-8") as f:
                             st.components.v1.html(f.read(), height=500, scrolling=True)
             else:
-                st.warning("Không đủ thành phố (cần ≥5 listings mỗi city).")
+                st.warning("Not enough cities (need ≥5 listings per city).")
                 if MAP_HTML.exists():
                     with open(MAP_HTML, "r", encoding="utf-8") as f:
                         st.components.v1.html(f.read(), height=500, scrolling=True)
         else:
-            st.warning("Cần cột giá (price) để vẽ bản đồ theo giá trung bình.")
+            st.warning("A price column is required to show mean price by city on the map.")
             if MAP_HTML.exists():
                 with open(MAP_HTML, "r", encoding="utf-8") as f:
                     st.components.v1.html(f.read(), height=500, scrolling=True)
@@ -244,24 +243,24 @@ elif section == "Bản đồ theo thành phố":
             with open(MAP_HTML, "r", encoding="utf-8") as f:
                 st.components.v1.html(f.read(), height=500, scrolling=True)
         else:
-            st.warning("Chưa có bản đồ. Upload CSV (có cột city, price) hoặc chạy notebook 02.")
+            st.warning("No map available. Upload a CSV with city and price columns or run notebook 02.")
 
-# --- Mô hình ---
-elif section == "Mô hình dự đoán giá":
-    st.header("Mô hình dự đoán giá (Random Forest)")
+# --- Model ---
+elif section == "Price Prediction Model":
+    st.header("Price Prediction Model (Random Forest)")
     if source_label and "uploaded_df" in st.session_state:
-        st.info("Mô hình được train trên dataset gốc. Feature importance tham khảo từ model đã lưu.")
+        st.info("Model was trained on the default dataset. Feature importance is from the saved model.")
     if not MODEL_PATH.exists():
-        st.info("Chưa có file `models/price_rf.pkl`. Chạy notebook 05 để train và lưu mô hình.")
+        st.info("No `models/price_rf.pkl` found. Run notebook 05 to train and save the model.")
     else:
         import joblib
         model = joblib.load(MODEL_PATH)
-        st.success("Đã load mô hình Random Forest.")
+        st.success("Random Forest model loaded.")
         if hasattr(model, "feature_importances_"):
             imp = pd.Series(model.feature_importances_, index=[f"f{i}" for i in range(len(model.feature_importances_))])
             st.subheader("Feature importance (top 15)")
             st.bar_chart(imp.nlargest(15))
-        st.markdown("Dùng notebook `05_dataset_readiness_demo.ipynb` để xem RMSE, MAE, R² và predicted vs actual.")
+        st.markdown("See notebook `05_dataset_readiness_demo.ipynb` for RMSE, MAE, R² and predicted vs actual.")
 
 st.sidebar.markdown("---")
 st.sidebar.markdown("**Final v1** – Zoopla Dataset")
