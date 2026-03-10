@@ -30,6 +30,7 @@ final_v1/
 │       └── impute_area.py
 ├── models/           # price_rf.pkl
 ├── report/           # group_report.docx (final report)
+├── app.py            # Streamlit app tổng hợp
 └── requirements.txt
 ```
 
@@ -51,6 +52,15 @@ Run in order 01 → 02 → 03 → 04 → 05 from project root (`final_v1`) or fr
 - **03:** Cleaning, feature engineering; saves `zoopla_cleaned.csv` and `zoopla_features.csv`.
 - **04:** Annotation (price_category); saves `zoopla_labeled.csv`.
 - **05:** Baseline ML (Linear Regression, Random Forest); saves `models/price_rf.pkl` and figures.
+
+## Run Streamlit app (tổng hợp)
+
+```bash
+cd final_v1
+streamlit run app.py
+```
+
+App gồm: tổng quan, dữ liệu & thống kê, chất lượng dữ liệu, phân phối & khám phá, bản đồ theo thành phố, mô hình dự đoán giá.
 
 ## Report
 
