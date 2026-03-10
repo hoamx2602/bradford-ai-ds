@@ -317,24 +317,36 @@ elif section == "Distributions & Exploration":
                     x = x[x.between(x.quantile(0.01), x.quantile(0.99))]
                 st.bar_chart(x.value_counts().sort_index().head(50))
 
-        # Price by city table and box plot
+        # Price by city table and box plot (with city selector)
         if "city" in df.columns and "price" in df.columns:
-            st.subheader("Price by city (top 10)")
+            st.subheader("Price by city")
             df["price_num"] = pd.to_numeric(df["price"], errors="coerce")
             df_valid = df.dropna(subset=["price_num"])
-            top_cities = df_valid["city"].value_counts().head(10).index.tolist()
-            df_top = df_valid[df_valid["city"].isin(top_cities)]
-            by_city = df_top.groupby("city")["price_num"].agg(["mean", "median", "count"]).round(0)
-            st.dataframe(by_city, use_container_width=True)
-            fig, ax = plt.subplots(figsize=(10, 4))
-            sns.boxplot(data=df_top, x="city", y="price_num", ax=ax, palette="muted")
-            ax.set_ylabel("Price (£)")
-            ax.set_xlabel("City")
-            ax.set_title("Price distribution by city")
-            plt.xticks(rotation=45, ha="right")
-            plt.tight_layout()
-            st.pyplot(fig)
-            plt.close(fig)
+            # Cities sorted by count (most listings first)
+            city_counts = df_valid["city"].value_counts()
+            all_cities = city_counts.index.tolist()
+            default_cities = all_cities[:5] if len(all_cities) >= 5 else all_cities
+            selected_cities = st.multiselect(
+                "Select cities to compare in the box plot (choose one or more for a clearer view)",
+                options=all_cities,
+                default=default_cities,
+                key="city_boxplot_select",
+            )
+            if selected_cities:
+                df_sel = df_valid[df_valid["city"].isin(selected_cities)]
+                by_city = df_sel.groupby("city")["price_num"].agg(["mean", "median", "count"]).round(0)
+                st.dataframe(by_city, use_container_width=True)
+                fig, ax = plt.subplots(figsize=(max(8, len(selected_cities) * 1.2), 4))
+                sns.boxplot(data=df_sel, x="city", y="price_num", ax=ax, palette="muted")
+                ax.set_ylabel("Price (£)")
+                ax.set_xlabel("City")
+                ax.set_title("Price distribution by selected city")
+                plt.xticks(rotation=45, ha="right")
+                plt.tight_layout()
+                st.pyplot(fig)
+                plt.close(fig)
+            else:
+                st.info("Select at least one city above to see the box plot.")
         elif "city" in df.columns:
             st.subheader("Count by city (top 10)")
             st.bar_chart(df["city"].value_counts().head(10))
