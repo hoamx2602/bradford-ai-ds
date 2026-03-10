@@ -7,7 +7,13 @@ Run from final_v1: streamlit run app.py
 import streamlit as st
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
 from pathlib import Path
+
+# Plot style
+sns.set_theme(style="whitegrid", palette="muted")
+plt.rcParams["figure.figsize"] = (6, 4)
 
 # Project root (directory containing app.py)
 ROOT = Path(__file__).resolve().parent
@@ -85,12 +91,74 @@ if section == "Overview":
     - **Structure:** `data/raw`, `data/cleaned`, `data/processed`, `reports/figures`, `models/`.
     """)
     if df is not None:
-        st.subheader("Data – first 5 rows")
-        st.dataframe(df.head(), use_container_width=True)
-        c1, c2, c3 = st.columns(3)
+        c1, c2, c3, c4, c5 = st.columns(5)
         c1.metric("Rows", f"{len(df):,}")
         c2.metric("Columns", len(df.columns))
-        c3.metric("Columns", ", ".join(df.columns[:5].tolist()) + ("..." if len(df.columns) > 5 else ""))
+        price_ser = pd.to_numeric(df["price"], errors="coerce") if "price" in df.columns else pd.Series(dtype=float)
+        c3.metric("Mean price (£)", f"{price_ser.mean():,.0f}" if len(price_ser.dropna()) else "—")
+        c4.metric("Missing (any col) %", f"{(1 - df.dropna(how='any').shape[0] / max(1, len(df))) * 100:.1f}%" if len(df) else "—")
+        c5.metric("Cities", df["city"].nunique() if "city" in df.columns else "—")
+        st.subheader("Data – first 5 rows")
+        st.dataframe(df.head(), use_container_width=True)
+
+        st.subheader("Visual snapshot")
+        work = df.copy()
+        if "price" in work.columns:
+            work["price"] = pd.to_numeric(work["price"], errors="coerce")
+        row1a, row1b = st.columns(2)
+        with row1a:
+            if "price" in work.columns:
+                p = work["price"].dropna()
+                p = p[p.between(p.quantile(0.01), p.quantile(0.99))] if p.max() > 1e5 else p
+                if len(p) > 0:
+                    fig, ax = plt.subplots(figsize=(6, 3.5))
+                    ax.hist(p, bins=40, color="steelblue", edgecolor="white")
+                    ax.set_title("Price distribution")
+                    ax.set_xlabel("Price (£)")
+                    st.pyplot(fig)
+                    plt.close(fig)
+        with row1b:
+            if "city" in work.columns:
+                top = work["city"].value_counts().head(12)
+                fig, ax = plt.subplots(figsize=(6, 3.5))
+                top.plot(kind="barh", ax=ax, color="coral", edgecolor="white")
+                ax.set_title("Listings by city (top 12)")
+                ax.set_xlabel("Count")
+                plt.tight_layout()
+                st.pyplot(fig)
+                plt.close(fig)
+        row2a, row2b = st.columns(2)
+        with row2a:
+            if "property_type" in work.columns:
+                pt = work["property_type"].value_counts().head(10)
+                fig, ax = plt.subplots(figsize=(6, 3.5))
+                pt.plot(kind="bar", ax=ax, color="seagreen", edgecolor="white")
+                ax.set_title("Listings by property type")
+                ax.set_xlabel("Property type")
+                plt.xticks(rotation=45, ha="right")
+                plt.tight_layout()
+                st.pyplot(fig)
+                plt.close(fig)
+        with row2b:
+            if "price_category" in work.columns:
+                pc = work["price_category"].value_counts()
+                fig, ax = plt.subplots(figsize=(6, 3.5))
+                pc.plot(kind="bar", ax=ax, color="mediumpurple", edgecolor="white")
+                ax.set_title("Price category distribution")
+                ax.set_xlabel("Category")
+                plt.xticks(rotation=45, ha="right")
+                plt.tight_layout()
+                st.pyplot(fig)
+                plt.close(fig)
+            elif "bedrooms" in work.columns:
+                b = work["bedrooms"].value_counts().sort_index()
+                fig, ax = plt.subplots(figsize=(6, 3.5))
+                b.plot(kind="bar", ax=ax, color="teal", edgecolor="white")
+                ax.set_title("Listings by bedrooms")
+                ax.set_xlabel("Bedrooms")
+                plt.tight_layout()
+                st.pyplot(fig)
+                plt.close(fig)
     else:
         st.warning("No data available. Upload a CSV in the sidebar or ensure `data/raw/zoopla_raw.csv` exists.")
 
@@ -105,21 +173,51 @@ elif section == "Data & Statistics":
         df = df.copy()
         if "price" in df.columns:
             df["price"] = pd.to_numeric(df["price"], errors="coerce")
-        c1, c2, c3 = st.columns(3)
+        c1, c2, c3, c4 = st.columns(4)
         c1.metric("Records", f"{len(df):,}")
         c2.metric("Columns", len(df.columns))
         if "price" in df.columns:
             c3.metric("Mean price (£)", f"{df['price'].mean():,.0f}")
+            c4.metric("Median price (£)", f"{df['price'].median():,.0f}")
         else:
             c3.metric("Numeric columns", len(df.select_dtypes(include=[np.number]).columns))
+            c4.metric("", "")
+        st.subheader("Numeric summary (describe)")
+        num = df.select_dtypes(include=[np.number])
+        if len(num.columns):
+            st.dataframe(num.describe().round(2), use_container_width=True)
         st.subheader("Sample data")
         st.dataframe(df.head(100), use_container_width=True)
-        if "price_category" in df.columns:
-            st.subheader("price_category distribution")
-            st.bar_chart(df["price_category"].value_counts())
-        elif "city" in df.columns:
-            st.subheader("Distribution by city (top 15)")
-            st.bar_chart(df["city"].value_counts().head(15))
+
+        st.subheader("Categorical distributions")
+        r1a, r1b = st.columns(2)
+        with r1a:
+            if "price_category" in df.columns:
+                st.bar_chart(df["price_category"].value_counts())
+            if "city" in df.columns:
+                st.caption("By city (top 15)")
+                st.bar_chart(df["city"].value_counts().head(15))
+        with r1b:
+            if "property_type" in df.columns:
+                st.bar_chart(df["property_type"].value_counts().head(12))
+            if "epc_rating" in df.columns:
+                st.caption("By EPC rating")
+                st.bar_chart(df["epc_rating"].value_counts())
+
+        if "price" in df.columns and "property_type" in df.columns:
+            st.subheader("Price by property type (box plot)")
+            top_pt = df["property_type"].value_counts().head(8).index.tolist()
+            df_pt = df[df["property_type"].isin(top_pt)].dropna(subset=["price"])
+            if len(df_pt) > 0:
+                fig, ax = plt.subplots(figsize=(10, 4))
+                sns.boxplot(data=df_pt, x="property_type", y="price", ax=ax, palette="muted")
+                ax.set_ylabel("Price (£)")
+                ax.set_xlabel("Property type")
+                ax.set_title("Price distribution by property type")
+                plt.xticks(rotation=45, ha="right")
+                plt.tight_layout()
+                st.pyplot(fig)
+                plt.close(fig)
 
 # --- Data Quality ---
 elif section == "Data Quality":
@@ -151,26 +249,92 @@ elif section == "Distributions & Exploration":
         st.warning("No data. Upload a CSV or run notebooks 01→04.")
     else:
         df = df.copy()
-        numeric_cols = df.select_dtypes(include=[np.number]).columns.tolist()
-        all_plot_cols = ["price", "bedrooms", "bathrooms", "area_sqft", "price_per_sqft"] + [c for c in numeric_cols if c not in ["price", "bedrooms", "bathrooms", "area_sqft", "price_per_sqft"]]
+        if "price" in df.columns:
+            df["price"] = pd.to_numeric(df["price"], errors="coerce")
+        num_cols = df.select_dtypes(include=[np.number]).columns.tolist()
+
+        # Correlation heatmap
+        if len(num_cols) >= 2:
+            st.subheader("Correlation heatmap (numeric columns)")
+            corr = df[num_cols].corr()
+            # Limit size for readability
+            if len(corr) > 12:
+                corr = corr.iloc[:12, :12]
+            fig, ax = plt.subplots(figsize=(9, 7))
+            sns.heatmap(corr, annot=True, fmt=".2f", cmap="RdBu_r", center=0, square=True, ax=ax)
+            plt.tight_layout()
+            st.pyplot(fig)
+            plt.close(fig)
+
+        # Scatter: price vs area (if both exist)
+        if "price" in df.columns and "area_sqft" in df.columns:
+            st.subheader("Price vs area (scatter)")
+            sub = df[["price", "area_sqft"]].dropna()
+            sub["area_sqft"] = pd.to_numeric(sub["area_sqft"], errors="coerce")
+            sub = sub[(sub["area_sqft"] > 0) & (sub["area_sqft"] < 15000)]
+            sub = sub[sub["price"].between(sub["price"].quantile(0.01), sub["price"].quantile(0.99))]
+            if len(sub) > 0:
+                fig, ax = plt.subplots(figsize=(7, 4))
+                ax.scatter(sub["area_sqft"], sub["price"], alpha=0.3, s=8)
+                ax.set_xlabel("Area (sq ft)")
+                ax.set_ylabel("Price (£)")
+                ax.set_title("Price vs area_sqft")
+                plt.tight_layout()
+                st.pyplot(fig)
+                plt.close(fig)
+
+        # Histograms: key numeric variables
+        st.subheader("Numeric distributions (histograms)")
+        plot_vars = [c for c in ["price", "area_sqft", "bedrooms", "bathrooms", "price_per_sqft"] if c in df.columns]
+        if not plot_vars:
+            plot_vars = num_cols[:6]
+        for var in plot_vars[:4]:  # max 4
+            x = pd.to_numeric(df[var], errors="coerce").dropna()
+            if len(x) == 0:
+                continue
+            if var == "price" and x.max() > 1e6:
+                x = x[x.between(x.quantile(0.01), x.quantile(0.99))]
+            if var == "area_sqft" and x.max() > 1e4:
+                x = x[x < 10000]
+            fig, ax = plt.subplots(figsize=(6, 3))
+            ax.hist(x, bins=min(40, x.nunique()), color="steelblue", edgecolor="white")
+            ax.set_title(f"{var} distribution")
+            ax.set_xlabel(var)
+            plt.tight_layout()
+            st.pyplot(fig)
+            plt.close(fig)
+
+        # Select variable for bar chart (discrete)
+        all_plot_cols = ["price", "bedrooms", "bathrooms", "area_sqft", "price_per_sqft"] + [c for c in num_cols if c not in ["price", "bedrooms", "bathrooms", "area_sqft", "price_per_sqft"]]
         all_plot_cols = [c for c in all_plot_cols if c in df.columns]
         if not all_plot_cols:
-            all_plot_cols = numeric_cols[:10] if numeric_cols else list(df.columns)[:5]
-        col = st.selectbox("Select variable for histogram", all_plot_cols, index=0)
+            all_plot_cols = num_cols[:10] if num_cols else list(df.columns)[:5]
+        col = st.selectbox("Select variable for value-count bar chart", all_plot_cols, index=0)
         if col in df.columns:
             x = pd.to_numeric(df[col], errors="coerce").dropna()
             if len(x) > 0:
                 if col == "price" and x.max() > 1e6:
                     x = x[x.between(x.quantile(0.01), x.quantile(0.99))]
                 st.bar_chart(x.value_counts().sort_index().head(50))
+
+        # Price by city table and box plot
         if "city" in df.columns and "price" in df.columns:
             st.subheader("Price by city (top 10)")
             df["price_num"] = pd.to_numeric(df["price"], errors="coerce")
             df_valid = df.dropna(subset=["price_num"])
             top_cities = df_valid["city"].value_counts().head(10).index.tolist()
             df_top = df_valid[df_valid["city"].isin(top_cities)]
-            by_city = df_top.groupby("city")["price_num"].agg(["mean", "count"]).round(0)
+            by_city = df_top.groupby("city")["price_num"].agg(["mean", "median", "count"]).round(0)
             st.dataframe(by_city, use_container_width=True)
+            fig, ax = plt.subplots(figsize=(10, 4))
+            sns.boxplot(data=df_top, x="city", y="price_num", ax=ax, palette="muted")
+            ax.set_ylabel("Price (£)")
+            ax.set_xlabel("City")
+            ax.set_title("Price distribution by city")
+            plt.xticks(rotation=45, ha="right")
+            plt.tight_layout()
+            st.pyplot(fig)
+            plt.close(fig)
         elif "city" in df.columns:
             st.subheader("Count by city (top 10)")
             st.bar_chart(df["city"].value_counts().head(10))
