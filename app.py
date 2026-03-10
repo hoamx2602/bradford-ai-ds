@@ -357,69 +357,98 @@ elif section == "Map by City":
     if source_label:
         st.info(source_label)
     if df is not None and "city" in df.columns:
-        price_col = "price" if "price" in df.columns else None
-        if not price_col:
-            for c in ["price_num"]:
-                if c in df.columns:
-                    price_col = c
-                    break
+        df_map = df.copy()
+        first_col = df_map.columns[0]
+        price_col = "price" if "price" in df_map.columns else None
+        if not price_col and "price_num" in df_map.columns:
+            price_col = "price_num"
         if price_col:
-            df_map = df.copy()
             df_map["_price_num"] = pd.to_numeric(df_map[price_col], errors="coerce")
-            first_col = df_map.columns[0]
             agg = df_map.groupby("city").agg(mean_price=("_price_num", "mean"), count=(first_col, "count")).reset_index()
-            agg = agg[agg["count"] >= 5]
-            if len(agg) > 0:
-                try:
-                    import folium
-                    CITY_COORDS = {
-                        "London": (51.5074, -0.1278), "Manchester": (53.4808, -2.2426),
-                        "Birmingham": (52.4862, -1.8904), "Leeds": (53.8008, -1.5491),
-                        "West Yorkshire": (53.8008, -1.5491), "Liverpool": (53.4084, -2.9916),
-                        "Cardiff": (51.4816, -3.1791), "Bristol": (51.4545, -2.5879),
-                        "Sheffield": (53.3811, -1.4701), "Newcastle upon Tyne": (54.9783, -1.6178),
-                        "Nottingham": (52.9548, -1.1581), "Leicester": (52.6369, -1.1398),
-                        "Edinburgh": (55.9533, -3.1883), "Glasgow": (55.8642, -4.2518),
-                        "Southampton": (50.9097, -1.4044), "Brighton": (50.8225, -0.1372),
-                        "Reading": (51.4543, -0.9731), "Surrey": (51.3148, -0.5597),
-                        "Essex": (51.5742, 0.4857), "Kent": (51.2787, 0.5217),
-                    }
-                    UK_CENTRE = (54.0, -2.5)
-                    m = folium.Map(location=[54.0, -2.5], zoom_start=6, tiles="CartoDB positron")
-                    for _, row in agg.iterrows():
-                        lat, lon = CITY_COORDS.get(row["city"], UK_CENTRE)
-                        radius = min(50, 10 + row["count"] / 80)
-                        color = "darkred" if row["mean_price"] > 500_000 else "orange" if row["mean_price"] > 300_000 else "green"
-                        folium.CircleMarker(
-                            location=[lat, lon],
-                            radius=radius,
-                            color=color,
-                            fill=True,
-                            fill_opacity=0.6,
-                            popup=f"{row['city']}<br>Listings: {int(row['count'])}<br>Mean price: £{row['mean_price']:,.0f}",
-                        ).add_to(m)
-                    st.components.v1.html(m._repr_html_(), height=500, scrolling=False)
-                except Exception as e:
-                    st.warning(f"Could not build map from data: {e}. Using default map.")
-                    if MAP_HTML.exists():
-                        with open(MAP_HTML, "r", encoding="utf-8") as f:
-                            st.components.v1.html(f.read(), height=500, scrolling=True)
-            else:
-                st.warning("Not enough cities (need ≥5 listings per city).")
+        else:
+            agg = df_map.groupby("city").agg(count=(first_col, "count")).reset_index()
+            agg["mean_price"] = np.nan
+        agg = agg[agg["count"] >= 1]
+        if len(agg) == 0:
+            st.warning("No city data to show on the map.")
+        else:
+            try:
+                import folium
+                CITY_COORDS = {
+                    "London": (51.5074, -0.1278), "Manchester": (53.4808, -2.2426),
+                    "Birmingham": (52.4862, -1.8904), "Leeds": (53.8008, -1.5491),
+                    "West Yorkshire": (53.8008, -1.5491), "Liverpool": (53.4084, -2.9916),
+                    "Cardiff": (51.4816, -3.1791), "Bristol": (51.4545, -2.5879),
+                    "Sheffield": (53.3811, -1.4701), "Newcastle upon Tyne": (54.9783, -1.6178),
+                    "Nottingham": (52.9548, -1.1581), "Leicester": (52.6369, -1.1398),
+                    "Edinburgh": (55.9533, -3.1883), "Glasgow": (55.8642, -4.2518),
+                    "Southampton": (50.9097, -1.4044), "Brighton": (50.8225, -0.1372),
+                    "Reading": (51.4543, -0.9731), "Surrey": (51.3148, -0.5597),
+                    "Essex": (51.5742, 0.4857), "Kent": (51.2787, 0.5217),
+                    "Belfast": (54.5973, -5.9301), "Aberdeen": (57.1497, -2.0943),
+                    "Cambridge": (52.2053, 0.1218), "Oxford": (51.7520, -1.2577),
+                }
+                UK_CENTRE = (54.0, -2.5)
+                if "geocode_cache" not in st.session_state:
+                    st.session_state["geocode_cache"] = {}
+                def get_coords(city_name):
+                    if not city_name or not str(city_name).strip():
+                        return UK_CENTRE
+                    city_str = str(city_name).strip()
+                    if city_str in CITY_COORDS:
+                        return CITY_COORDS[city_str]
+                    if city_str in st.session_state["geocode_cache"]:
+                        return st.session_state["geocode_cache"][city_str]
+                    try:
+                        from geopy.geocoders import Nominatim
+                        from geopy.extra.rate_limiter import RateLimiter
+                        geolocator = Nominatim(user_agent="zoopla_app")
+                        geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1)
+                        loc = geocode(f"{city_str}, UK", timeout=5)
+                        if loc:
+                            coords = (loc.latitude, loc.longitude)
+                            st.session_state["geocode_cache"][city_str] = coords
+                            return coords
+                    except Exception:
+                        pass
+                    st.session_state["geocode_cache"][city_str] = UK_CENTRE
+                    return UK_CENTRE
+                m = folium.Map(location=[54.0, -2.5], zoom_start=6, tiles="CartoDB positron")
+                for _, row in agg.iterrows():
+                    lat, lon = get_coords(row["city"])
+                    count = int(row["count"])
+                    radius = min(40, max(6, 4 + count / 100))
+                    mean_p = row.get("mean_price") or 0
+                    if pd.notna(mean_p) and mean_p > 0:
+                        color = "darkred" if mean_p > 500_000 else "orange" if mean_p > 300_000 else "green"
+                        popup = f"{row['city']}<br>Listings: {count}<br>Mean price: £{mean_p:,.0f}"
+                    else:
+                        color = "steelblue"
+                        popup = f"{row['city']}<br>Listings: {count}"
+                    folium.CircleMarker(
+                        location=[lat, lon],
+                        radius=radius,
+                        color=color,
+                        fill=True,
+                        fill_opacity=0.6,
+                        popup=popup,
+                    ).add_to(m)
+                st.caption(f"Showing **{len(agg)}** cities from your data. Size = listings count; colour = mean price (green < £300k, orange £300k–£800k, red > £800k).")
+                st.components.v1.html(m._repr_html_(), height=500, scrolling=False)
+            except Exception as e:
+                st.warning(f"Could not build map: {e}")
                 if MAP_HTML.exists():
                     with open(MAP_HTML, "r", encoding="utf-8") as f:
                         st.components.v1.html(f.read(), height=500, scrolling=True)
-        else:
-            st.warning("A price column is required to show mean price by city on the map.")
-            if MAP_HTML.exists():
-                with open(MAP_HTML, "r", encoding="utf-8") as f:
-                    st.components.v1.html(f.read(), height=500, scrolling=True)
     else:
+        if df is None:
+            st.warning("No data. Upload a CSV or load default data.")
+        else:
+            st.warning("Data has no 'city' column. Add a city column to see the map.")
         if MAP_HTML.exists():
+            st.caption("Default map (from saved file) below.")
             with open(MAP_HTML, "r", encoding="utf-8") as f:
                 st.components.v1.html(f.read(), height=500, scrolling=True)
-        else:
-            st.warning("No map available. Upload a CSV with city and price columns or run notebook 02.")
 
 # --- Model ---
 elif section == "Price Prediction Model":
